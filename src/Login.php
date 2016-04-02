@@ -62,8 +62,8 @@ class Login
 
       if (extension_loaded('curve25519') || extension_loaded('protobuf')) {
           if (file_exists($this->parent->dataFolder.'axolotl-'.$this->phoneNumber.'.db')) {
-              $result = $this->parent->getAxolotlStore()->loadPreKeys();
-              if (empty($result)) {
+              $pre_keys = $this->parent->getAxolotlStore()->loadPreKeys();
+              if (empty($pre_keys)) {
                   $this->parent->sendSetPreKeys();
                   $this->parent->logFile('info', 'Sending prekeys to WA server');
               }
@@ -120,8 +120,6 @@ class Login
 
             return $this->outputKey->EncodeMessage($array, 0, strlen($array), false);
         }
-
-        return;
     }
 
   /**

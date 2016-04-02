@@ -96,11 +96,11 @@ class ProtocolNode
     {
         if ($this->children) {
             if (is_int($tag)) {
-                if (isset($this->childen[$tag])) {
+                if (isset($this->children[$tag])) {
                     array_slice($this->children, $tag, 1);
                 }
             } else {
-                foreach ($this->childen as $i => $child) {
+                foreach ($this->children as $i => $child) {
                     $index = -1;
                     if (strcmp($child->tag, $tag) == 0) {
                         $index = $i;
@@ -137,6 +137,9 @@ class ProtocolNode
      */
     public function nodeString($indent = '', $isChild = false)
     {
+        // non printable characters regex
+        $nonPrintable = '#[^\x20-\x7E]#';
+
         //formatters
         $lt = '<';
         $gt = '>';
@@ -158,7 +161,11 @@ class ProtocolNode
         if (strlen($this->data) > 0) {
             if (strlen($this->data) <= 1024) {
                 //message
-                $ret .= $this->data;
+                if (preg_match($nonPrintable, $this->data)) {
+                    $ret .= bin2hex($this->data);
+                } else {
+                    $ret .= $this->data;
+                }
             } else {
                 //raw data
                 $ret .= ' '.strlen($this->data).' byte data';
@@ -248,8 +255,6 @@ class ProtocolNode
                 }
             }
         }
-
-        return;
     }
 
     /**
