@@ -2205,6 +2205,7 @@ class WhatsProt
             $this->sendAck($node, 'receipt');
         }
         if ($node->getTag() == 'message') {
+            $this->sendAck($node, 'receipt');
             $handler = new MessageHandler($this, $node);
         }
         if ($node->getTag() == 'presence' && $node->getAttribute('status') == 'dirty') {
